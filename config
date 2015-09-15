@@ -1,0 +1,33 @@
+/* Copyright (C) 2015 Schrodi */
+
+###########################
+# LibreCoin Configuration #
+#  Version  0.02015.9.14a  #
+###########################
+
+################################################################################
+#      The following is for configuration to connect to the MySQL server.      #
+#                                                                              #
+#           host -      This is the IP address for the MySQL server.           #
+#                           (default: 127.0.0.1)                               #
+#                                                                              #
+#           user -      This is a user with access to the database you are     #
+#                           using for librecoin. using 'root' is not           #
+#                           reccommended.                                      #
+#                                                                              #
+#           database -  This is the name of the database that librecoin will   #
+#                           use. (default: librecoin)                          #
+#                                                                              #
+#           port -      This is the port MySQL is listening on for             #
+#                           connections. (default: 3306)                       #
+#                                                                              #
+#           pass -      This is the password for user. This password should be #
+#                           secure.                                            #
+################################################################################
+host = "127.0.0.1"
+user = "schrodi"
+database = "librecoin"
+# Port not needed? Research more. -Schrodi
+port = 3306
+# If no password is set in the config file then you will be prompted to enter one when the program is launched.
+#pass = "Password"

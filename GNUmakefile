@@ -2,15 +2,18 @@
 # A basic makefile.
 CC = gcc
 CFLAGS = -Wall -Wextra
-LFLAGS =
-IFLAGS =
+LFLAGS = -lmysqlclient -lconfig
+IFLAGS = -I/usr/include/mysql
 
-librecoin : main.o
-	$(CC) $(IFLAGS) $(LFLAGS) -o $@ $^
+librecoin : helpfile.o main.o
+	$(CC) $(LFLAGS) -o $@ $^
 
 main.o : main.c
 	$(CC) $(IFLAGS) $(CFLAGS) -o $@ -c $<
 
+helpfile.o : helpfile.c
+	$(CC) $(IFLAGS) $(LFLAGS) $(CFLAGS) -o $@ -c $<
+
 clear : clean
 clean :
-	rm -f librecoin main.o
+	rm -f librecoin main.o helpfile.o
