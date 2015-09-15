@@ -123,5 +123,6 @@ int main (int argc,char** argv){
 //function to set password from command line.
 void set_password(void){
     fprintf(stdout, "Password: ");
-    scanf("%s", pass);
+    fgets(pass, 255, stdin);
+	pass[(strlen(pass)-1)] = '\0';
 }//set_password
