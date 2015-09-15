@@ -58,7 +58,13 @@ void check_arguments(int argc, char** argv){
             if( (strncmp("--user", argv[i], 6) == 0) ){
                 user = argv[i+1];
                 flags |= USER_SET;
-            }//--host
+            }//--user
+            else
+            if( (strncmp("--password", argv[i], 10) == 0) ){
+                set_password();
+                flags |= PASS_SET;
+            }//--password
+
 
             else{} //Do nothing.
         }//end for loop checking arguments.
@@ -70,16 +76,21 @@ void print_help(int argc, char** argv){
     if(argc >= 1){} //Do nothing. for compiler warning, argc unsued right now.
     fprintf(stderr, "\n\tLibreCoin\n\tProper Usage:\n");
     fprintf(stderr, "\t\t%s [OPTIONS]\n\n", argv[0]);
+
     fprintf(stderr, "\n\t\t [OPTIONS]\n\n");
-    fprintf(stderr, "\t\t -h, ?, --help\t\t\tDisplay this help file and exit.\n\n");
+
+    fprintf(stderr, "\t\t -h, ?, --help\t\t\tDisplay this help file and exit.\n");
     fprintf(stderr, "\t\t --version\t\t\tDisplay the program version number and exit.\n\n");
+
     fprintf(stderr, "\t\t --port <port number>\t\tSet Port for MySQL Server.\n");
     fprintf(stderr, "\t\t --host <host address>\t\tSet Host for MySQL Server.\n");
     fprintf(stderr, "\t\t --user <user name>\t\tSet User for MySQL Server.\n");
+
+    fprintf(stderr, "\n\t\t --password\t\t\tYou will be prompted to enter your MySQL Password.\n");
     fprintf(stderr, "\n\n");
 }//print_help
 
 //function to print version to stderr.
-void print_version(){
+void print_version(void){
   fprintf(stderr, "\tVersion: %s for %s (%s)\n\n", LC_VERSION, SYSTEM_TYPE, MACHINE_TYPE);
 }//print_version

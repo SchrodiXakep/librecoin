@@ -3,6 +3,7 @@
 /* Copyright (C) 1991-2014 Free Software Foundation, Inc. */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* libconfig - A library for processing structured configuration files
    Copyright (C) 2005-2010  Mark A Lindner */
@@ -18,18 +19,25 @@ const int EXIT_FLAG = (1<<0);
 const int PORT_SET = (1<<1);
 const int HOST_SET = (1<<2);
 const int USER_SET = (1<<3);
-const int DATABASE_SET = (1<<4);
+const int PASS_SET = (1<<4);
+const int DATABASE_SET = (1<<5);
 
 /* Global Variables */
 const char* host;
 const char* user;
 const char* database;
+char pass[256];
 int port;
 
 /* Function Prototypes */
+void set_password(void);
 
 /* Begin Main LibreCoin Function */
 int main (int argc,char** argv){
+	//variables for setting MySQL Password.
+	const char* tmp_pass;
+
+
 
 	//Give me a little space...
 	printf("\n");
@@ -89,10 +97,20 @@ int main (int argc,char** argv){
 		}
 	}
 
+	if((flags & PASS_SET) != 0){} //Password set by function call. Do nothing.
+	else{ //Set password from config file.
+		if(config_lookup_string(&conf, "pass", &tmp_pass)){ memcpy(pass,tmp_pass,strlen(tmp_pass)); }
+		else{
+			fprintf(stderr, "String Error\n or user already set.");
+			return(EXIT_FAILURE);
+		}
+	}
+
 	/*!!! CHECKING VARIABLES !!!*/
 	fprintf(stderr, "port: %d\n", port);
 	fprintf(stderr, "host: %s\n", host);
 	fprintf(stderr, "user: %s\n", user);
+	fprintf(stderr, "pass: %s\n", pass);
 
 
 
@@ -101,3 +119,9 @@ int main (int argc,char** argv){
 	EOL;
 	return(EXIT_SUCCESS); //END OF LINE.
 }//main
+
+//function to set password from command line.
+void set_password(void){
+    fprintf(stdout, "Password: ");
+    scanf("%s", pass);
+}//set_password

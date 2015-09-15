@@ -30,4 +30,4 @@ database = "librecoin"
 # Port not needed? Research more. -Schrodi
 port = 3306
 # If no password is set in the config file then you will be prompted to enter one when the program is launched.
-#pass = "Password"
+pass = "Password"
