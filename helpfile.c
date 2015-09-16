@@ -61,7 +61,8 @@ void check_arguments(int argc, char** argv){
             }//--user
             else
             if( (strncmp("--password", argv[i], 10) == 0) ){
-                set_password();
+                printf("Password: ");
+                set_password(pass);
                 flags |= PASS_SET;
             }//--password
 

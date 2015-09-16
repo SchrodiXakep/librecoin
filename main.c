@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <termios.h>
 
 /* libconfig - A library for processing structured configuration files
    Copyright (C) 2005-2010  Mark A Lindner */
@@ -21,16 +23,17 @@ const int HOST_SET = (1<<2);
 const int USER_SET = (1<<3);
 const int PASS_SET = (1<<4);
 const int DATABASE_SET = (1<<5);
+#define SIZE 256
 
 /* Global Variables */
 const char* host;
 const char* user;
 const char* database;
-char pass[256];
+char pass[SIZE];
 int port;
 
 /* Function Prototypes */
-void set_password(void);
+void set_password(char* pass);
 
 /* Begin Main LibreCoin Function */
 int main (int argc,char** argv){
@@ -99,20 +102,26 @@ int main (int argc,char** argv){
 
 	if((flags & PASS_SET) != 0){} //Password set by function call. Do nothing.
 	else{ //Set password from config file.
-		if(config_lookup_string(&conf, "pass", &tmp_pass)){ memcpy(pass,tmp_pass,strlen(tmp_pass)); }
+		if(config_lookup_string(&conf, "pass", &tmp_pass)){
+			memcpy(pass,tmp_pass,strlen(tmp_pass)); //copy password from tmp storage then free tmp.
+			free((void*)tmp_pass); //cast to void* to suppress warning.
+		}
 		else{
 			fprintf(stderr, "String Error\n or user already set.");
 			return(EXIT_FAILURE);
 		}
 	}
 
+/**************************
+ * End of Variables Setup *
+ **************************/
+
+
 	/*!!! CHECKING VARIABLES !!!*/
 	fprintf(stderr, "port: %d\n", port);
 	fprintf(stderr, "host: %s\n", host);
 	fprintf(stderr, "user: %s\n", user);
 	fprintf(stderr, "pass: %s\n", pass);
-
-
 
 	//Destroy config structure.
 	config_destroy(&conf);
@@ -121,8 +130,28 @@ int main (int argc,char** argv){
 }//main
 
 //function to set password from command line.
-void set_password(void){
-    fprintf(stdout, "Password: ");
-    fgets(pass, 255, stdin);
-	pass[(strlen(pass)-1)] = '\0';
+void set_password(char* pass){
+	static struct termios oldt, newt;
+	    int i = 0;
+	    int c;
+
+	    /*saving the old settings of STDIN_FILENO and copy settings for resetting*/
+	    tcgetattr( STDIN_FILENO, &oldt);
+	    newt = oldt;
+
+	    /*setting the approriate bit in the termios struct*/
+	    newt.c_lflag &= ~(ECHO);
+
+	    /*setting the new bits*/
+	    tcsetattr( STDIN_FILENO, TCSANOW, &newt);
+
+	    /*reading the password from the console*/
+	    while ((c = getchar())!= '\n' && c != EOF && i < SIZE){
+	        pass[i] = c;
+			i += 1;
+	    }
+	    pass[i] = '\0';
+
+	    /*resetting our old STDIN_FILENO*/
+	    tcsetattr( STDIN_FILENO, TCSANOW, &oldt);
 }//set_password

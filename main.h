@@ -20,11 +20,11 @@ extern const int DATABASE_SET;
 extern const char* host;
 extern const char* user;
 extern const char* database;
-extern char pass[256];
+extern char pass[];
 extern int port;
 
 /* Function Prototypes */
-void set_password(void);
+void set_password(char* pass);
 
 // End __MAIN__ ifndef
 #define EOL printf("\nEND OF LINE.\n")
