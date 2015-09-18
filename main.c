@@ -14,6 +14,7 @@
 /* Local Includes */
 #include "main.h"
 #include "helpfile.h"
+#include "sqlfunc.h"
 
 /* Flag Definitions */
 int flags;
@@ -46,13 +47,8 @@ int main (int argc,char** argv){
 	check_arguments(argc, argv);
 	if((flags & EXIT_FLAG) != 0){ return(EXIT_SUCCESS); } // Exit on specific arguments.
 
-
 	//Create config structure and variables to store config settings.
 	config_t conf;
-
-	//config_setting_t *setting; //-Wall says unused variable?
-	// const char* tmpstr;
-	// int tmpint;
 
 	//initialize config structure.
 	config_init(&conf);
@@ -122,6 +118,13 @@ int main (int argc,char** argv){
  * End of Variables Setup *
  **************************/
 
+ /********************
+  * Connect to MySQL *
+  ********************/
+
+	open_database();
+	close_database();
+
 
 	/*!!! CHECKING VARIABLES !!!*/
 	fprintf(stderr, "port: %d\n", port);
@@ -129,7 +132,7 @@ int main (int argc,char** argv){
 	fprintf(stderr, "user: %s\n", user);
 	fprintf(stderr, "database: %s\n", database);
 	fprintf(stderr, "pass: %s\n", pass);
-	
+
 	//Destroy config structure.
 	config_destroy(&conf);
 	EOL;
