@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <string.h>
 
+
 /* libconfig - A library for processing structured configuration files
    Copyright (C) 2005-2010  Mark A Lindner */
 #include <libconfig.h>
@@ -62,10 +63,10 @@ void check_arguments(int argc, char** argv){
             else
             if( (strncmp("--password", argv[i], 10) == 0) ){
                 printf("Password: ");
-                set_password(pass);
+                set_password((char*)pass);
                 flags |= PASS_SET;
+                printf("\n\n"); //to put a return after entering Password:
             }//--password
-
 
             else{} //Do nothing.
         }//end for loop checking arguments.

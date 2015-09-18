@@ -23,13 +23,12 @@ const int HOST_SET = (1<<2);
 const int USER_SET = (1<<3);
 const int PASS_SET = (1<<4);
 const int DATABASE_SET = (1<<5);
-#define SIZE 256
 
 /* Global Variables */
 const char* host;
 const char* user;
 const char* database;
-char pass[SIZE];
+const char pass[SIZE]; //FIX TO USE SIZE DEFINE!!!!
 int port;
 
 /* Function Prototypes */
@@ -47,13 +46,13 @@ int main (int argc,char** argv){
 
 	//Check Argumens. Work in progress. (helpfile)
 	check_arguments(argc, argv);
+	if((flags & EXIT_FLAG) != 0){ return(EXIT_SUCCESS); } // Exit on specific arguments.
 
-	if((flags & EXIT_FLAG) != 0){ return(EXIT_SUCCESS); } //Help called, exit.
 
 	//Create config structure and variables to store config settings.
 	config_t conf;
-	//config_setting_t *setting; //-Wall says unused variable?
 
+	//config_setting_t *setting; //-Wall says unused variable?
 	// const char* tmpstr;
 	// int tmpint;
 
@@ -75,7 +74,7 @@ int main (int argc,char** argv){
 
 	if((flags & PORT_SET) != 0){} //Port set by argument. Do nothing.
 	else{ //Set port from config file.
-		if(config_lookup_int(&conf, "port", &port)){}
+		if(config_lookup_int(&conf, "port", &port )){}
 		else{
 			fprintf(stderr, "Number Error\n or port already set.");
 			return(EXIT_FAILURE);
@@ -103,7 +102,7 @@ int main (int argc,char** argv){
 	if((flags & PASS_SET) != 0){} //Password set by function call. Do nothing.
 	else{ //Set password from config file.
 		if(config_lookup_string(&conf, "pass", &tmp_pass)){
-			memcpy(pass,tmp_pass,strlen(tmp_pass)); //copy password from tmp storage then free tmp.
+			memcpy((char*)pass,tmp_pass,strlen(tmp_pass)); //copy password from tmp storage then free tmp.
 			free((void*)tmp_pass); //cast to void* to suppress warning.
 		}
 		else{
@@ -129,7 +128,7 @@ int main (int argc,char** argv){
 	return(EXIT_SUCCESS); //END OF LINE.
 }//main
 
-//function to set password from command line.
+//function to set password from command line argument.
 void set_password(char* pass){
 	static struct termios oldt, newt;
 	    int i = 0;
