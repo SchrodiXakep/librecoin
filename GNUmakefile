@@ -5,6 +5,7 @@ CFLAGS = -Wall -Wextra -DBIG_JOINS=1 -fno-strict-aliasing -g -DNDEBUG
 LFLAGS = -lconfig -L/usr/lib/x86_64-linux-gnu -lmysqlclient -lpthread -lz -lm -ldl
 IFLAGS = -I/usr/include/mysql
 
+all : librecoin
 librecoin : sqlfunc.o helpfile.o main.o
 	$(CC) $(LFLAGS) -o $@ $^
 

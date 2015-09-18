@@ -24,6 +24,7 @@
 #           pass -      This is the password for user. This password should be #
 #                           secure.                                            #
 ################################################################################
+
 host = "127.0.0.1"
 user = "schrodi"
 database = "schrodi"

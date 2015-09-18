@@ -118,25 +118,21 @@ int main (int argc,char** argv){
  * End of Variables Setup *
  **************************/
 
+ 	printf("\tVariables Set\n\n");
+
  /********************
   * Connect to MySQL *
   ********************/
 
 	open_database();
+	printf("\t\tConnected to %s on %s:%d\n",database,host,port);
+
 	close_database();
-
-
-	/*!!! CHECKING VARIABLES !!!*/
-	fprintf(stderr, "port: %d\n", port);
-	fprintf(stderr, "host: %s\n", host);
-	fprintf(stderr, "user: %s\n", user);
-	fprintf(stderr, "database: %s\n", database);
-	fprintf(stderr, "pass: %s\n", pass);
-
-	//Destroy config structure.
+	printf("\t\tConnection to %s closed\n", host);
 	config_destroy(&conf);
+	printf("\n\tVariables Destroyed\n");
 	EOL;
-	return(EXIT_SUCCESS); //END OF LINE.
+	return(EXIT_SUCCESS);
 }//main
 
 //function to set password from command line argument.

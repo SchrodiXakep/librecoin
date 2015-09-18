@@ -22,13 +22,8 @@
 void connect_to_database(void);
 
 // /* Global Variables */
-// static char *opt_host_name = NULL;      /* server host (default=localhost) */
-// static char *opt_user_name = NULL;      /* username (default=login name) */
-// static char *opt_password = NULL;       /* password (default=none) */
-// static unsigned int opt_port_num = 0;   /* port number (use built-in value) */
-// static char *opt_db_name = NULL;        /* database name (default=none) */
-static char *opt_socket_name = NULL;    /* socket name (use built-in value) */
-static unsigned int opt_flags = 0;      /* connection flags (none) */
+static char *socket_name = NULL;    /* socket name (use built-in value) */
+static unsigned int my_flags = 0;      /* connection flags (none) */
 static MYSQL *conn;                     /* pointer to connection handler */
 
 /* connect to server */
@@ -42,7 +37,7 @@ void open_database(void){
     }
 
     /* connect to server */
-    if (mysql_real_connect (conn, host, user, pass, database, port, opt_socket_name, opt_flags) == NULL){
+    if (mysql_real_connect (conn, host, user, pass, database, port, socket_name, my_flags) == NULL){
         fprintf (stderr, "mysql_real_connect() failed\n");
         mysql_close (conn);
         exit (1);
@@ -52,5 +47,4 @@ void open_database(void){
 /* disconnect from server */
 void close_database(void){
     mysql_close (conn);
-    exit (0);
 }
