@@ -60,6 +60,10 @@ void check_arguments(int argc, char** argv){
                 user = argv[i+1];
                 flags |= USER_SET;
             }//--user
+            if( (strncmp("--database", argv[i], 10) == 0) ){
+                database = argv[i+1];
+                flags |= DATABASE_SET;
+            }//--database
             else
             if( (strncmp("--password", argv[i], 10) == 0) ){
                 printf("Password: ");
@@ -87,6 +91,7 @@ void print_help(int argc, char** argv){
     fprintf(stderr, "\t\t --port <port number>\t\tSet Port for MySQL Server.\n");
     fprintf(stderr, "\t\t --host <host address>\t\tSet Host for MySQL Server.\n");
     fprintf(stderr, "\t\t --user <user name>\t\tSet User for MySQL Server.\n");
+    fprintf(stderr, "\t\t --database <database name>\t\tSet Database for MySQL Server.\n");
 
     fprintf(stderr, "\n\t\t --password\t\t\tYou will be prompted to enter your MySQL Password.\n");
     fprintf(stderr, "\n\n");

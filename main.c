@@ -39,8 +39,6 @@ int main (int argc,char** argv){
 	//variables for setting MySQL Password.
 	const char* tmp_pass;
 
-
-
 	//Give me a little space...
 	printf("\n");
 
@@ -99,6 +97,15 @@ int main (int argc,char** argv){
 		}
 	}
 
+	if((flags & DATABASE_SET) != 0){} //Database set by argument. Do nothing.
+	else{ //Set database from config file.
+		if(config_lookup_string(&conf, "database", &database)){}
+		else{
+			fprintf(stderr, "String Error\n or database already set.");
+			return(EXIT_FAILURE);
+		}
+	}
+
 	if((flags & PASS_SET) != 0){} //Password set by function call. Do nothing.
 	else{ //Set password from config file.
 		if(config_lookup_string(&conf, "pass", &tmp_pass)){
@@ -120,8 +127,9 @@ int main (int argc,char** argv){
 	fprintf(stderr, "port: %d\n", port);
 	fprintf(stderr, "host: %s\n", host);
 	fprintf(stderr, "user: %s\n", user);
+	fprintf(stderr, "database: %s\n", database);
 	fprintf(stderr, "pass: %s\n", pass);
-
+	
 	//Destroy config structure.
 	config_destroy(&conf);
 	EOL;
