@@ -35,34 +35,40 @@ void check_arguments(int argc, char** argv){
     //This is where the function really begins.
     else{
         //Begin checking arguments
-        for(i = 0; i < argc; i += 1){
+        for(i = 1; i < argc; i += 1){
             if( (strncmp("-h", argv[i], 2) == 0) || (strncmp("--help", argv[i], 6) == 0) || (strncmp("?", argv[i], 1) == 0) ){
                 print_help(argc, argv);
                 flags |= EXIT_FLAG; //flag set to EXIT_SUCCESS.
+                continue;
             }//-h, --help
             else
-            if( (strncmp("--version", argv[i], 9) == 0) ){
+            if( (strncmp("-v", argv[i], 2) == 0) || (strncmp("--version", argv[i], 9) == 0) ){
                 print_version();
                 flags |= EXIT_FLAG; //flag set to EXIT_SUCCESS.
+                continue;
             }//--version
             else
             if( (strncmp("--port", argv[i], 6) == 0) ){
                 port = atoi(argv[i+1]);
                 flags |= PORT_SET;
+                continue;
             }//--port
             else
             if( (strncmp("--host", argv[i], 6) == 0) ){
                 host = argv[i+1];
                 flags |= HOST_SET;
+                continue;
             }//--host
             else
             if( (strncmp("--user", argv[i], 6) == 0) ){
                 user = argv[i+1];
                 flags |= USER_SET;
+                continue;
             }//--user
             if( (strncmp("--database", argv[i], 10) == 0) ){
                 database = argv[i+1];
                 flags |= DATABASE_SET;
+                continue;
             }//--database
             else
             if( (strncmp("--password", argv[i], 10) == 0) ){
@@ -70,10 +76,15 @@ void check_arguments(int argc, char** argv){
                 set_password((char*)pass);
                 flags |= PASS_SET;
                 printf("\n\n"); //to put a return after entering Password:
+                continue;
             }//--password
 
-            else{} //Do nothing.
+            else{
+                fprintf(stderr,"Ignoring argument: %s (variable or unknown argument.)\n", argv[i]);
+                continue;
+            } //Log Error and Do nothing.
         }//end for loop checking arguments.
+        fprintf(stderr, "\n"); //giving some room.
     }//end function if/else.
 }//check_arguments
 
@@ -86,7 +97,7 @@ void print_help(int argc, char** argv){
     fprintf(stderr, "\n\t\t [OPTIONS]\n\n");
 
     fprintf(stderr, "\t\t -h, ?, --help\t\t\tDisplay this help file and exit.\n");
-    fprintf(stderr, "\t\t --version\t\t\tDisplay the program version number and exit.\n\n");
+    fprintf(stderr, "\t\t -v, --version\t\t\tDisplay the program version number and exit.\n\n");
 
     fprintf(stderr, "\t\t --port <port number>\t\tSet Port for MySQL Server.\n");
     fprintf(stderr, "\t\t --host <host address>\t\tSet Host for MySQL Server.\n");

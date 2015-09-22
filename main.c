@@ -127,8 +127,11 @@ int main (int argc,char** argv){
 	open_database();
 	printf("\t\tConnected to %s on %s:%d\n",database,host,port);
 
+	//DO STUFF!
+
+
 	close_database();
-	printf("\t\tConnection to %s closed\n", host);
+	printf("\t\tConnection to %s on %s:%d closed\n", database,host,port);
 	config_destroy(&conf);
 	printf("\n\tVariables Destroyed\n");
 	EOL;
