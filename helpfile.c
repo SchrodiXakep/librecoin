@@ -205,9 +205,10 @@ void set_variables(void){
 			memcpy((char*)pass,tmp_pass,strlen(tmp_pass)); //copy password from tmp storage then free tmp.
 			free((void*)tmp_pass); //cast to void* to suppress warning.
 		}
-		else{
-			fprintf(stderr, "%s -\tString Error\n or user already set.", timestamp());
-			exit(1);
+		else{ //Password not set by config or argument.
+			printf("Password: ");
+			set_password((char*)pass); //Get password from user.
+			printf("\n\n");
 		}
 	}
 

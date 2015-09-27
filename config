@@ -27,7 +27,7 @@
 
 host = "127.0.0.1"
 user = "schrodi"
-database = "schrodi"
+database = "test_librecoin_db"
 port = 3306
 # If no password is set in the config file then you will be prompted to enter one when the program is launched.
-pass = "Password"
+#pass = "Password"
