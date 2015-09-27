@@ -4,5 +4,5 @@
 #define __MAIN__
 
 // End __MAIN__ ifndef
-#define EOL printf("\nEND OF LINE.\n")
+#define EOL printf("\n\n\t\tEND OF LINE.\n\n")
 #endif

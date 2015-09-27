@@ -17,7 +17,7 @@
 
 /* Begin Main LibreCoin Function */
 int main (int argc,char** argv){
-	//create log file for stderr.
+	//create log file for stderr. (helpfile)
 	error_log();
 
 	//Give me a little space...
@@ -37,13 +37,13 @@ int main (int argc,char** argv){
 
 	//(sqlfunc)
 	open_database();
-	printf("%s - Connected to %s on %s:%d\n", timestamp(),database,host,port);
+	printf("%s - Connected to %s on %s@%s:%d\n", timestamp(),database,user,host,port);
 
 	//DO STUFF!
 
 	//(sqlfunc)
 	close_database();
-	printf("%s - Connection to %s on %s:%d closed\n", timestamp(), database,host,port);
+	printf("%s - Connection to %s on %s@%s:%d closed\n", timestamp(), database,user,host,port);
 
 	//destroy config structure. (helpfile)
 	close_config();

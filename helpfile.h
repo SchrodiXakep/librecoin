@@ -1,9 +1,7 @@
 /* Copyright (C) 2015 Schrodi */
 
-#ifndef __helpfile__
-#define __helpfile__
-
-/* Global Variables */
+#ifndef __HELPFILE__
+#define __HELPFILE__
 
 //Version: (Release).(Year with preceeding 0 because the future).(Month).(Day)(Alpha/Beta/ReleaseCandidate)
 #define LC_VERSION "0.02015.9.26a" //updates randomly.

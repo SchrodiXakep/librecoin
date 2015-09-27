@@ -44,9 +44,9 @@ void open_database(void){
         mysql_close (conn);
         exit (1);
     }
-}
+}//open_database
 
 /* disconnect from server */
 void close_database(void){
     mysql_close (conn);
-}
+}//close_database

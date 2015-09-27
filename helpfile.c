@@ -45,9 +45,6 @@ int port;
 //Create config structure and variables to store config settings.
 config_t conf;
 
-
-
-
 /* Function Prototypes */
 void set_password(char* pass);
 void check_arguments(int argc, char** argv);
@@ -135,9 +132,8 @@ void check_arguments(int argc, char** argv){
                 continue;
             }//--password
 
-            else{
-                continue;  //Unknown argument or variable. Do nothing.
-            }
+            else{ continue; } //Unknown argument or variable. Do nothing.
+			
         }//end for loop checking arguments.
     }//end function if/else.
 }//check_arguments
@@ -201,7 +197,7 @@ void set_variables(void){
 
 	if((flags & PASS_SET) != 0){} //Password set by function call. Do nothing.
 	else{ //Set password from config file.
-		if(config_lookup_string(&conf, "pass", &tmp_pass)){
+		if(config_lookup_string(&conf, "password", &tmp_pass)){
 			memcpy((char*)pass,tmp_pass,strlen(tmp_pass)); //copy password from tmp storage then free tmp.
 			free((void*)tmp_pass); //cast to void* to suppress warning.
 		}

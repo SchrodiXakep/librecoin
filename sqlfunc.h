@@ -1,7 +1,7 @@
 /* Copyright (C) 2015 Schrodi */
 
-#ifndef __sqlfunc__
-#define __sqlfunc__
+#ifndef __SQLFUNC__
+#define __SQLFUNC__
 
 /* Global Variables */
 
