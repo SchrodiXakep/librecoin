@@ -20,7 +20,8 @@
 #include "helpfile.h"
 
 /* Function Prototypes */
-void connect_to_database(void);
+void open_database(void);
+void close_database(void);
 
 // /* Global Variables */
 static char *socket_name = NULL;    /* socket name (use built-in value) */
