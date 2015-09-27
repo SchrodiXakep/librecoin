@@ -4,7 +4,7 @@
 #define __MAIN__
 
 //Version: (Release).(Year with preceeding 0 because the future).(Month).(Day)(Alpha/Beta/ReleaseCandidate)
-#define LC_VERSION "0.02015.9.22a" //update later when significant progress has been made.
+#define LC_VERSION "0.02015.9.26a" //update later when significant progress has been made.
 
 /* Global Flags */
 extern int flags;

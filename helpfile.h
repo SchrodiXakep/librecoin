@@ -9,5 +9,7 @@
 void check_arguments(int argc, char** argv);
 void print_help(int argc, char** argv);
 void print_version(void);
+void error_log(void);
+char *timestamp(void);
 
 #endif

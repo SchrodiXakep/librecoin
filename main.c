@@ -37,6 +37,9 @@ void set_password(char* pass);
 
 /* Begin Main LibreCoin Function */
 int main (int argc,char** argv){
+	//create log file for stderr.
+	error_log();
+
 	//variables for setting MySQL Password.
 	const char* tmp_pass;
 
@@ -55,7 +58,7 @@ int main (int argc,char** argv){
 
 	//Read configuration file.
 	if(!config_read_file(&conf, "config")){
-		fprintf(stderr, "%s:%d - %s\n", config_error_file(&conf), config_error_line(&conf),
+		fprintf(stderr, "%s -\t%s:%d - %s\n", timestamp(), config_error_file(&conf), config_error_line(&conf),
 				config_error_text(&conf));
 		//Destroy config structure and exit.
 		config_destroy(&conf);
@@ -70,7 +73,7 @@ int main (int argc,char** argv){
 	else{ //Set port from config file.
 		if(config_lookup_int(&conf, "port", &port )){}
 		else{
-			fprintf(stderr, "Number Error\n or port already set.");
+			fprintf(stderr, "%s -\tNumber Error\n or port already set.", timestamp());
 			return(EXIT_FAILURE);
 		}
 	}
@@ -79,7 +82,7 @@ int main (int argc,char** argv){
 	else{ //Set host from config file.
 		if(config_lookup_string(&conf, "host", &host)){}
 		else{
-			fprintf(stderr, "String Error\n or host already set.");
+			fprintf(stderr, "%s -\tString Error\n or host already set.", timestamp());
 			return(EXIT_FAILURE);
 		}
 	}
@@ -88,7 +91,7 @@ int main (int argc,char** argv){
 	else{ //Set user from config file.
 		if(config_lookup_string(&conf, "user", &user)){}
 		else{
-			fprintf(stderr, "String Error\n or user already set.");
+			fprintf(stderr, "%s -\tString Error\n or user already set.", timestamp());
 			return(EXIT_FAILURE);
 		}
 	}
@@ -97,7 +100,7 @@ int main (int argc,char** argv){
 	else{ //Set database from config file.
 		if(config_lookup_string(&conf, "database", &database)){}
 		else{
-			fprintf(stderr, "String Error\n or database already set.");
+			fprintf(stderr, "%s -\tString Error\n or database already set.", timestamp());
 			return(EXIT_FAILURE);
 		}
 	}
@@ -109,7 +112,7 @@ int main (int argc,char** argv){
 			free((void*)tmp_pass); //cast to void* to suppress warning.
 		}
 		else{
-			fprintf(stderr, "String Error\n or user already set.");
+			fprintf(stderr, "%s -\tString Error\n or user already set.", timestamp());
 			return(EXIT_FAILURE);
 		}
 	}

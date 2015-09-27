@@ -2,7 +2,7 @@
 /********************************************************
  * helpfile -- functions to display help commands,      *
  *      version information, and other similar          *
- *      command line messages.                          *
+ *      command line messages and helpful functions.    *
  ********************************************************/
 
 /* Copyright (C) 1991-2014 Free Software Foundation, Inc. */
@@ -10,7 +10,9 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <string.h>
-
+#include <unistd.h>
+#include <fcntl.h>
+#include <time.h>
 
 /* libconfig - A library for processing structured configuration files
    Copyright (C) 2005-2010  Mark A Lindner */
@@ -26,6 +28,8 @@
 void check_arguments(int argc, char** argv);
 void print_help(int argc, char** argv);
 void print_version(void);
+void error_log(void);
+char *timestamp(void);
 
 // Function to set variables based on command line arguments and config file.
 void check_arguments(int argc, char** argv){
@@ -80,35 +84,59 @@ void check_arguments(int argc, char** argv){
             }//--password
 
             else{
-                fprintf(stderr,"Ignoring argument: %s (variable or unknown argument.)\n", argv[i]);
-                continue;
-            } //Log Error and Do nothing.
+                continue;  //Unknown argument or variable. Do nothing.
+            }
         }//end for loop checking arguments.
-        fprintf(stderr, "\n"); //giving some room.
     }//end function if/else.
 }//check_arguments
 
 //function to print help to stderr.
 void print_help(int argc, char** argv){
     if(argc >= 1){} //Do nothing. for compiler warning, argc unsued right now.
-    fprintf(stderr, "\n\tLibreCoin\n\tProper Usage:\n");
-    fprintf(stderr, "\t\t%s [OPTIONS]\n\n", argv[0]);
+    printf("\n\tLibreCoin\n\tProper Usage:\n");
+    printf("\t\t%s [OPTIONS]\n\n", argv[0]);
 
-    fprintf(stderr, "\n\t\t [OPTIONS]\n\n");
+    printf("\n\t\t [OPTIONS]\n\n");
 
-    fprintf(stderr, "\t\t -h, ?, --help\t\t\tDisplay this help file and exit.\n");
-    fprintf(stderr, "\t\t -v, --version\t\t\tDisplay the program version number and exit.\n\n");
+    printf("\t\t -h, ?, --help\t\t\tDisplay this help file and exit.\n");
+    printf("\t\t -v, --version\t\t\tDisplay the program version number and exit.\n\n");
 
-    fprintf(stderr, "\t\t --port <port number>\t\tSet Port for MySQL Server.\n");
-    fprintf(stderr, "\t\t --host <host address>\t\tSet Host for MySQL Server.\n");
-    fprintf(stderr, "\t\t --user <user name>\t\tSet User for MySQL Server.\n");
-    fprintf(stderr, "\t\t --database <database name>\t\tSet Database for MySQL Server.\n");
+    printf("\t\t --port <port number>\t\tSet Port for MySQL Server.\t(Default: 3306)\n");
+    printf("\t\t --host <host address>\t\tSet Host for MySQL Server.\t(Default: localhost)\n");
+    printf("\t\t --user <user name>\t\tSet User for MySQL Server.\n");
+    printf("\t\t --database <database name>\tSet Database for MySQL Server.\t(Default: librecoin)\n");
 
-    fprintf(stderr, "\n\t\t --password\t\t\tYou will be prompted to enter your MySQL Password.\n");
-    fprintf(stderr, "\n\n");
+    printf("\n\t\t --password\t\t\tYou will be prompted to enter your MySQL Password.\n");
+    printf("\n\n");
 }//print_help
 
 //function to print version to stderr.
 void print_version(void){
-  fprintf(stderr, "\tVersion: %s for %s (%s)\n\n", LC_VERSION, SYSTEM_TYPE, MACHINE_TYPE);
+  printf("\tVersion: %s for %s (%s)\n\n", LC_VERSION, SYSTEM_TYPE, MACHINE_TYPE);
 }//print_version
+
+//function to create stderr file.
+void error_log(void){
+    int fd = open("../error.log", O_RDWR | O_APPEND | O_CREAT, S_IRUSR | S_IRGRP | S_IROTH); //create read only error log.
+    if (fd < 0) {
+         printf("%s -\tCannot open error.log\n", timestamp());
+         exit(1);
+    }
+    if (dup2(fd, STDERR_FILENO) < 0) {
+         printf("%s -\tCannot redirect stderr.\n", timestamp());
+         exit(1);
+    }
+}//error_log
+
+//function to get the current timestamp.
+char *timestamp(void){
+    time_t rawtime;
+    struct tm * timeinfo;
+
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    char *timestamp = asctime(timeinfo);
+    timestamp[strlen(timestamp)-1] = '\0'; //remove '\n' from asctime.
+
+    return timestamp;
+}//timestamp

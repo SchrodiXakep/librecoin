@@ -17,6 +17,7 @@
 
 /* Local Includes */
 #include "main.h"       //Global Variables.
+#include "helpfile.h"
 
 /* Function Prototypes */
 void connect_to_database(void);
@@ -32,13 +33,13 @@ void open_database(void){
     conn = mysql_init (NULL);
 
     if (conn == NULL){
-        fprintf (stderr, "mysql_init() failed (probably out of memory)\n");
+        fprintf (stderr, "%s -\tmysql_init() failed (probably out of memory)\n", timestamp());
         exit (1);
     }
 
     /* connect to server */
     if (mysql_real_connect (conn, host, user, pass, database, port, socket_name, my_flags) == NULL){
-        fprintf (stderr, "mysql_real_connect() failed\n");
+        fprintf (stderr, "%s -\tmysql_real_connect() failed:\t%s\n", timestamp(), mysql_error(conn));
         mysql_close (conn);
         exit (1);
     }
