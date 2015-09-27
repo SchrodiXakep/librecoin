@@ -117,7 +117,7 @@ void print_version(void){
 
 //function to create stderr file.
 void error_log(void){
-    int fd = open("../error.log", O_RDWR | O_APPEND | O_CREAT, S_IRUSR | S_IRGRP | S_IROTH); //create read only error log.
+    int fd = open("../error.log", O_RDWR | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH); //create read only error log. (user can write.)
     if (fd < 0) {
          printf("%s -\tCannot open error.log\n", timestamp());
          exit(1);
