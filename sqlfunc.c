@@ -16,7 +16,6 @@
 #include <my_config.h>
 
 /* Local Includes */
-#include "main.h"       //Global Variables.
 #include "helpfile.h"
 
 /* Function Prototypes */
@@ -44,9 +43,11 @@ void open_database(void){
         mysql_close (conn);
         exit (1);
     }
+    printf("%s, Connected to %s on %s@%s:%d\n", timestamp(),database,user,host,port);
 }//open_database
 
 /* disconnect from server */
 void close_database(void){
     mysql_close (conn);
+    printf("%s, Connection to %s on %s@%s:%d closed\n", timestamp(), database,user,host,port);
 }//close_database

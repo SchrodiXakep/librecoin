@@ -33,7 +33,6 @@ int main (int argc,char** argv){
 
 	//set variables from config file. (helpfile)
 	set_variables();
- 	printf("%s, Variables Set\n", timestamp());
 
  /********************
   * Connect to MySQL *
@@ -41,17 +40,15 @@ int main (int argc,char** argv){
 
 	//(sqlfunc)
 	open_database();
-	printf("%s, Connected to %s on %s@%s:%d\n", timestamp(),database,user,host,port);
 
 	//DO STUFF!
 
 	//(sqlfunc)
 	close_database();
-	printf("%s, Connection to %s on %s@%s:%d closed\n", timestamp(), database,user,host,port);
+
 
 	//destroy config structure. (helpfile)
 	close_config();
-	printf("%s, Variables Destroyed\n", timestamp());
 	EOL;
 	return(EXIT_SUCCESS);
 }//main

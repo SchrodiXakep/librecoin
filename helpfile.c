@@ -212,11 +212,13 @@ void set_variables(void){
  * End of Variables Setup *
  **************************/
 
+	printf("%s, Variables Set\n", timestamp());
 }//set_variables
 
 //function to destroy config structure.
 void close_config(void){
     config_destroy(&conf);
+	printf("%s, Variables Destroyed\n", timestamp());
 }//close_config
 
 //function to print help to stderr.
