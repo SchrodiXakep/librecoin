@@ -132,8 +132,8 @@ void check_arguments(int argc, char** argv){
                 continue;
             }//--password
 
-            else{ continue; } //Unknown argument or variable. Do nothing.
-			
+            else{ continue; } //Unknown argument or variable. Do nothing and continue.
+
         }//end for loop checking arguments.
     }//end function if/else.
 }//check_arguments
@@ -148,7 +148,7 @@ void set_variables(void){
 
 	//Read configuration file.
 	if(!config_read_file(&conf, "config")){
-		fprintf(stderr, "%s -\t%s:%d - %s\n", timestamp(), config_error_file(&conf), config_error_line(&conf),
+		fprintf(stderr, "%s, %s:%d - %s\n", timestamp(), config_error_file(&conf), config_error_line(&conf),
 				config_error_text(&conf));
 		//Destroy config structure and exit.
 		config_destroy(&conf);
@@ -163,7 +163,7 @@ void set_variables(void){
 	else{ //Set port from config file.
 		if(config_lookup_int(&conf, "port", &port )){}
 		else{
-			fprintf(stderr, "%s -\tNumber Error\n or port already set.", timestamp());
+			fprintf(stderr, "%s, Number Error\n or port already set.", timestamp());
 			exit(1);
 		}
 	}
@@ -172,7 +172,7 @@ void set_variables(void){
 	else{ //Set host from config file.
 		if(config_lookup_string(&conf, "host", &host)){}
 		else{
-			fprintf(stderr, "%s -\tString Error\n or host already set.", timestamp());
+			fprintf(stderr, "%s, String Error\n or host already set.", timestamp());
 			exit(1);
 		}
 	}
@@ -181,7 +181,7 @@ void set_variables(void){
 	else{ //Set user from config file.
 		if(config_lookup_string(&conf, "user", &user)){}
 		else{
-			fprintf(stderr, "%s -\tString Error\n or user already set.", timestamp());
+			fprintf(stderr, "%s, String Error\n or user already set.", timestamp());
 			exit(1);
 		}
 	}
@@ -190,7 +190,7 @@ void set_variables(void){
 	else{ //Set database from config file.
 		if(config_lookup_string(&conf, "database", &database)){}
 		else{
-			fprintf(stderr, "%s -\tString Error\n or database already set.", timestamp());
+			fprintf(stderr, "%s, String Error\n or database already set.", timestamp());
 			exit(1);
 		}
 	}
@@ -248,11 +248,11 @@ void print_version(void){
 void error_log(void){
     int fd = open("../error.log", O_RDWR | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH); //create an error log.
     if (fd < 0) {
-         printf("%s -\tCannot open error.log\n", timestamp());
+         printf("%s, Cannot open error.log\n", timestamp());
          exit(1);
     }
     if (dup2(fd, STDERR_FILENO) < 0) {
-         printf("%s -\tCannot redirect stderr.\n", timestamp());
+         printf("%s, Cannot redirect stderr.\n", timestamp());
          exit(1);
     }
 }//error_log

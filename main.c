@@ -1,4 +1,8 @@
-/* Copyright (C) 2015 Schrodi */
+/* Copyright (C) 2015 Schrodi
+We have gone to a lot of trouble to ask questions to clarify the scope of the problem and the data necessary
+to support that. The decisions to which we have come are hypothetical. They are not right or wrong. Even for
+a real problem there will not be right or wrong answers; we can only ever hope for a good pragmatic solution.
+ */
 
 /* Copyright (C) 1991-2014 Free Software Foundation, Inc. */
 #include <stdio.h>
@@ -29,7 +33,7 @@ int main (int argc,char** argv){
 
 	//set variables from config file. (helpfile)
 	set_variables();
- 	printf("%s - Variables Set\n", timestamp());
+ 	printf("%s, Variables Set\n", timestamp());
 
  /********************
   * Connect to MySQL *
@@ -37,17 +41,17 @@ int main (int argc,char** argv){
 
 	//(sqlfunc)
 	open_database();
-	printf("%s - Connected to %s on %s@%s:%d\n", timestamp(),database,user,host,port);
+	printf("%s, Connected to %s on %s@%s:%d\n", timestamp(),database,user,host,port);
 
 	//DO STUFF!
 
 	//(sqlfunc)
 	close_database();
-	printf("%s - Connection to %s on %s@%s:%d closed\n", timestamp(), database,user,host,port);
+	printf("%s, Connection to %s on %s@%s:%d closed\n", timestamp(), database,user,host,port);
 
 	//destroy config structure. (helpfile)
 	close_config();
-	printf("%s - Variables Destroyed\n", timestamp());
+	printf("%s, Variables Destroyed\n", timestamp());
 	EOL;
 	return(EXIT_SUCCESS);
 }//main
