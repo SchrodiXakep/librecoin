@@ -41,6 +41,7 @@ void open_database(void){
     if (mysql_real_connect (conn, host, user, pass, database, port, socket_name, my_flags) == NULL){
         fprintf (stderr, "%s, mysql_real_connect() failed:\t%s\n", timestamp(), mysql_error(conn));
         mysql_close (conn);
+        fprintf(stderr, "%s, Connected to %s on %s@%s:%d\n", timestamp(),database,user,host,port);
         exit (1);
     }
     printf("%s, Connected to %s on %s@%s:%d\n", timestamp(),database,user,host,port);

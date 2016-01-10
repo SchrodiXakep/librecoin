@@ -74,9 +74,14 @@ void set_password(char* pass){
 	        pass[i] = c;
 			i += 1;
 	    }
-	    pass[i] = '\0';
+		pass[i] = '\0';
+		//Check to make sure password is entered.
+		if(pass[0]=='\0'){
+			fprintf(stderr, "%s, Password Error: No password entered.\n", timestamp());
+			exit(1);
+		}
 
-	    /*resetting our old STDIN_FILENO*/
+	    /*rcd esetting our old STDIN_FILENO*/
 	    tcsetattr( STDIN_FILENO, TCSANOW, &oldt);
 }//set_password
 
@@ -125,7 +130,7 @@ void check_arguments(int argc, char** argv){
             }//--database
             else
             if( (strncmp("--password", argv[i], 10) == 0) ){
-                printf("Password: ");
+                printf("Enter password: ");
                 set_password((char*)pass);
                 flags |= PASS_SET;
                 printf("\n\n"); //to put a return after entering Password:
@@ -163,7 +168,7 @@ void set_variables(void){
 	else{ //Set port from config file.
 		if(config_lookup_int(&conf, "port", &port )){}
 		else{
-			fprintf(stderr, "%s, Number Error\n or port already set.", timestamp());
+			fprintf(stderr, "%s, Config Error: Port not understood.\n", timestamp());
 			exit(1);
 		}
 	}
@@ -172,7 +177,7 @@ void set_variables(void){
 	else{ //Set host from config file.
 		if(config_lookup_string(&conf, "host", &host)){}
 		else{
-			fprintf(stderr, "%s, String Error\n or host already set.", timestamp());
+			fprintf(stderr, "%s, Config Error: Host not understood.\n", timestamp());
 			exit(1);
 		}
 	}
@@ -181,7 +186,7 @@ void set_variables(void){
 	else{ //Set user from config file.
 		if(config_lookup_string(&conf, "user", &user)){}
 		else{
-			fprintf(stderr, "%s, String Error\n or user already set.", timestamp());
+			fprintf(stderr, "%s, Config Error: User not understood.\n", timestamp());
 			exit(1);
 		}
 	}
@@ -190,7 +195,7 @@ void set_variables(void){
 	else{ //Set database from config file.
 		if(config_lookup_string(&conf, "database", &database)){}
 		else{
-			fprintf(stderr, "%s, String Error\n or database already set.", timestamp());
+			fprintf(stderr, "%s, Config Error: Database not understood.\n", timestamp());
 			exit(1);
 		}
 	}
@@ -212,7 +217,7 @@ void set_variables(void){
  * End of Variables Setup *
  **************************/
 
-	printf("%s, Variables Set\n", timestamp());
+	printf("%s, Variables Created.\n", timestamp());
 }//set_variables
 
 //function to destroy config structure.
