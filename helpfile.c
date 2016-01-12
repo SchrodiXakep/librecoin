@@ -36,14 +36,13 @@ const int DATABASE_SET = (1<<5);
 
 /* Global Variables */
 //MySQL
+//Create config structure and variables to store config settings.
+config_t conf;
 const char* host;
 const char* user;
 const char* database;
 const char pass[SIZE]; //FIX TO USE SIZE DEFINE!!!!
 int port;
-
-//Create config structure and variables to store config settings.
-config_t conf;
 
 /* Function Prototypes */
 void set_password(char* pass);
@@ -81,7 +80,7 @@ void set_password(char* pass){
 			exit(1);
 		}
 
-	    /*rcd esetting our old STDIN_FILENO*/
+	    /*resetting our old STDIN_FILENO*/
 	    tcsetattr( STDIN_FILENO, TCSANOW, &oldt);
 }//set_password
 

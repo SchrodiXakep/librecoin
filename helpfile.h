@@ -4,7 +4,7 @@
 #define __HELPFILE__
 
 //Version: (Release).(Year with preceeding 0 because the future).(Month).(Day)(Alpha/Beta/ReleaseCandidate)
-#define LC_VERSION "0.02015.9.26a" //updates randomly.
+#define LC_VERSION "0.02016.1.11a" //updates randomly.
 
 /* Global Flags */
 extern int flags;
