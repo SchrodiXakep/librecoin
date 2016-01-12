@@ -41,7 +41,7 @@ int main (int argc,char** argv){
 	//(sqlfunc)
 	open_database();
 	check_database_structure();
-	
+
 	//DO STUFF!
 
 	//(sqlfunc)
