@@ -1,3 +1,4 @@
+#Main Program
 librecoin
 
 # Object files
@@ -32,3 +33,6 @@ librecoin
 
 # Debug files
 *.dSYM/
+
+#Error Log
+error.log

@@ -245,14 +245,14 @@ void print_help(int argc, char** argv){
     printf("\n\n");
 }//print_help
 
-//function to print version to stderr.
+//function to print version to stdout.
 void print_version(void){
   printf("\tVersion: %s for %s (%s)\n\n", LC_VERSION, SYSTEM_TYPE, MACHINE_TYPE);
 }//print_version
 
 //function to create stderr file.
 void error_log(void){
-    int fd = open("../error.log", O_RDWR | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH); //create an error log.
+    int fd = open("error.log", O_RDWR | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH); //create an error log.
     if (fd < 0) {
          printf("%s, Cannot open error.log\n", timestamp());
          exit(1);

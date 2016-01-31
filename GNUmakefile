@@ -20,4 +20,4 @@ sqlfunc.o : sqlfunc.c
 
 clear : clean
 clean :
-	rm -f librecoin main.o helpfile.o sqlfunc.o
+	rm -f librecoin main.o helpfile.o sqlfunc.o error.log
