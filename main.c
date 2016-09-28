@@ -18,6 +18,7 @@ a real problem there will not be right or wrong answers; we can only ever hope f
 #include "main.h"
 #include "helpfile.h"
 #include "sqlfunc.h"
+#include "servfunc.h"
 
 /* Begin Main LibreCoin Function */
 int main (int argc,char** argv){
@@ -29,7 +30,7 @@ int main (int argc,char** argv){
 
 	//Check Argumens. Work in progress. (helpfile)
 	check_arguments(argc, argv);
-	if((flags & EXIT_FLAG) != 0){ return(EXIT_SUCCESS); } // Exit on specific arguments.
+	//if((flags & EXIT_FLAG) != 0){ return(EXIT_SUCCESS); } // Exit on specific arguments.
 
 	//set variables from config file. (helpfile)
 	set_variables();
@@ -42,14 +43,17 @@ int main (int argc,char** argv){
 	open_database();
 	check_database_structure();
 
+	//(servfunc)
+	start_listening();
+
 	//DO STUFF!
 
 	//(sqlfunc)
 	close_database();
 
-
 	//destroy config structure. (helpfile)
 	close_config();
+
 	EOL;
 	return(EXIT_SUCCESS);
 }//main

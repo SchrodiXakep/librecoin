@@ -27,12 +27,12 @@
 
 /* Flag Definitions */
 int flags;
-const int EXIT_FLAG = (1<<0);
-const int PORT_SET = (1<<1);
-const int HOST_SET = (1<<2);
-const int USER_SET = (1<<3);
-const int PASS_SET = (1<<4);
-const int DATABASE_SET = (1<<5);
+//const int EXIT_FLAG = (1<<0);
+const int PORT_SET = (1<<0);
+const int HOST_SET = (1<<1);
+const int USER_SET = (1<<2);
+const int PASS_SET = (1<<3);
+const int DATABASE_SET = (1<<4);
 
 /* Global Variables */
 //MySQL
@@ -95,14 +95,12 @@ void check_arguments(int argc, char** argv){
         for(i = 1; i < argc; i += 1){
             if( (strncmp("-h", argv[i], 2) == 0) || (strncmp("--help", argv[i], 6) == 0) || (strncmp("?", argv[i], 1) == 0) ){
                 print_help(argc, argv);
-                flags |= EXIT_FLAG; //flag set to EXIT_SUCCESS.
-                continue;
+				exit(0);
             }//-h, --help
             else
             if( (strncmp("-v", argv[i], 2) == 0) || (strncmp("--version", argv[i], 9) == 0) ){
                 print_version();
-                flags |= EXIT_FLAG; //flag set to EXIT_SUCCESS.
-                continue;
+				exit(0);
             }//--version
             else
             if( (strncmp("--port", argv[i], 6) == 0) ){
@@ -227,7 +225,7 @@ void close_config(void){
 
 //function to print help to stderr.
 void print_help(int argc, char** argv){
-    if(argc >= 1){} //Do nothing. for compiler warning, argc unsued right now.
+    if(argc >= 1){} //Do nothing. for compiler warning, argc unused right now.
     printf("\n\tLibreCoin\n\tProper Usage:\n");
     printf("\t\t%s [OPTIONS]\n\n", argv[0]);
 
@@ -242,6 +240,7 @@ void print_help(int argc, char** argv){
     printf("\t\t --database <database name>\tSet Database for MySQL Server.\t(Default: librecoin)\n");
 
     printf("\n\t\t --password\t\t\tYou will be prompted to enter your MySQL Password.\n");
+	printf("\n\t\t To store changes more perminatly please see the config file.\n");
     printf("\n\n");
 }//print_help
 

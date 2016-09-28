@@ -25,11 +25,136 @@ void close_database(void);
 void check_database_structure(void);
 void process_result_set (MYSQL *conn, MYSQL_RES *res_set);
 
-// /* Global Variables */
-#define DATABASE_SIZE 2     //Current number of tables in database.
+/* Global Variables */
+#define DATABASE_SIZE 10     //Current number of tables in database.
 static char *socket_name = NULL;    /* socket name (use built-in value) */
 static unsigned int my_flags = 0;      /* connection flags (none) */
 static MYSQL *conn;                     /* pointer to connection handler */
+
+/*********************
+ *  Database Schema  *
+ *********************/
+const char *user_table = "\
+           CREATE TABLE users (\
+               user_id INT UNSIGNED NOT NULL AUTO_INCREMENT,\
+               user_name VARCHAR(15) UNIQUE NOT NULL,\
+                    PRIMARY KEY (user_id, user_name),\
+               pseudonym VARCHAR(15) NULL,\
+               surname VARCHAR(15) NOT NULL,\
+               middle_name VARCHAR(15) NULL,\
+               given_name VARCHAR(15) NOT NULL,\
+               name_suffix VARCHAR(6) NULL,\
+               created DATE NOT NULL,\
+               user_public_key VARCHAR(512),\
+               user_hash CHAR(40) NOT NULL\
+            );";
+
+const char *user_server = "\
+            CREATE TABLE user_server (\
+                server_id INT UNSIGNED NOT NULL AUTO_INCREMENT,\
+                    PRIMARY KEY (server_id),\
+                user_id INT UNSIGNED NOT NULL,\
+                    FOREIGN KEY (user_id) REFERENCES users (user_id),\
+                server_ip CHAR(16) NOT NULL,\
+                server_port CHAR(6) NOT NULL,\
+                server_onion_service CHAR(40) NULL,\
+                server_key VARCHAR(512) NOT NULL\
+            )ENGINE = InnoDB;";
+
+const char *phone_number = "\
+            CREATE TABLE phone_number (\
+                phone_id INT UNSIGNED NOT NULL AUTO_INCREMENT,\
+                    PRIMARY KEY (phone_id),\
+                user_id INT UNSIGNED NOT NULL,\
+                    FOREIGN KEY (user_id) REFERENCES users (user_id),\
+                area_code VARCHAR(5) NOT NULL,\
+                phone_number VARCHAR(15) NOT NULL,\
+                phone_number_from DATE NOT NULL,\
+                phone_number_to DATE NULL\
+            )ENGINE = InnoDB;";
+
+const char *email_address = "\
+            CREATE TABLE email_address (\
+                email_id INT UNSIGNED NOT NULL AUTO_INCREMENT,\
+                    PRIMARY KEY (email_id),\
+                user_id INT UNSIGNED NOT NULL,\
+                    FOREIGN KEY (user_id) REFERENCES users (user_id),\
+                email VARCHAR(15) NOT NULL,\
+                gpg_key_id VARCHAR(16) NULL,\
+                gpg_fingerprint VARCHAR(52) NULL,\
+                email_address_from DATE NOT NULL,\
+                email_address_to DATE NULL\
+            )ENGINE = InnoDB;";
+
+const char *physical_address = "\
+            CREATE TABLE physical_address (\
+                address_id INT UNSIGNED NOT NULL AUTO_INCREMENT,\
+                    PRIMARY KEY (address_id),\
+                user_id INT UNSIGNED NOT NULL,\
+                    FOREIGN KEY (user_id) REFERENCES users (user_id),\
+                line_1 VARCHAR(15) NOT NULL,\
+                line_2 VARCHAR(15) NULL,\
+                line_3 VARCHAR(15) NULL,\
+                town_city VARCHAR(15) NOT NULL,\
+                zip_postcode VARCHAR(10) NOT NULL,\
+                state_province_county VARCHAR(20) NOT NULL,\
+                country VARCHAR(20) NOT NULL,\
+                other VARCHAR(10) NULL,\
+                address_from DATE NOT NULL,\
+                address_to DATE NULL\
+            )ENGINE = InnoDB;";
+
+const char *business = "\
+            CREATE TABLE business (\
+                business_id INT UNSIGNED NOT NULL AUTO_INCREMENT,\
+                    PRIMARY KEY (business_id),\
+                user_id INT UNSIGNED NOT NULL,\
+                    FOREIGN KEY (user_id) REFERENCES users (user_id),\
+                line_1 VARCHAR(15) NOT NULL,\
+                line_2 VARCHAR(15) NULL,\
+                line_3 VARCHAR(15) NULL,\
+                town_city VARCHAR(15) NOT NULL,\
+                zip_postcode VARCHAR(10) NOT NULL,\
+                state_province_county VARCHAR(20) NOT NULL,\
+                country VARCHAR(20) NOT NULL,\
+                other VARCHAR(10) NULL\
+            )ENGINE = InnoDB;";
+
+//CREDIT TABLES
+const char *user_generated_credits = "\
+            CREATE TABLE user_generated_credits (\
+                credit_id INT UNSIGNED NOT NULL AUTO_INCREMENT,\
+                    PRIMARY KEY (credit_id),\
+                user_id INT UNSIGNED NOT NULL,\
+                    FOREIGN KEY (user_id) REFERENCES users (user_id),\
+                credits INT NOT NULL,\
+                created_on DATE NOT NULL,\
+                credit_hash CHAR(40) NOT NULL\
+            )ENGINE = InnoDB;";
+
+const char *receved_credits = "\
+            CREATE TABLE receved_credits (\
+                credit_id INT UNSIGNED NOT NULL AUTO_INCREMENT,\
+                    PRIMARY KEY (credit_id),\
+                user_id INT UNSIGNED NOT NULL,\
+                    FOREIGN KEY (user_id) REFERENCES users (user_id),\
+                credits INT NOT NULL,\
+                created_on DATE NOT NULL,\
+                credit_hash CHAR(40) NOT NULL\
+            )ENGINE = InnoDB;";
+
+const char *sent_credits = "\
+            CREATE TABLE sent_credits (\
+                credits INT NOT NULL\
+            )ENGINE = InnoDB;";
+
+const char *generate_credits_on_date = "\
+            CREATE TABLE generate_credits_on_date (\
+                next_date DATE NOT NULL,\
+                    PRIMARY KEY (next_date, user_id),\
+                user_id INT UNSIGNED NOT NULL,\
+                    FOREIGN KEY (user_id) REFERENCES users (user_id)\
+            )ENGINE = InnoDB;";
 
 /* close connection and exit */
 void my_error_exit(char* err){
@@ -63,107 +188,55 @@ void check_database_structure(void){
 
             /* Tables will be created resources deallocated */
 
-            if (mysql_query(conn, "CREATE TABLE users (\
-                            user_id INT UNSIGNED NOT NULL,\
-                            PRIMARY KEY (user_id),\
-                            user_name VARCHAR(15) NOT NULL,\
-                            pseudonym VARCHAR(15) NULL,\
-                            surname VARCHAR(15) NOT NULL,\
-                            middle_name VARCHAR(15) NULL,\
-                            given_name VARCHAR(15) NOT NULL,\
-                            name_suffix VARCHAR(6) NULL,\
-                            character_hash CHAR(40) NOT NULL\
-                        );") != 0){ my_error_exit ("CREATE TABLE \'users\' failed."); }
-            printf("%s, Table \'users\' created.\n", timestamp());
+            if (mysql_query(conn, user_table) != 0){
+                my_error_exit ("CREATE TABLE \'users\' failed.");
+            } printf("%s, Table \'users\' created.\n", timestamp());
             //CREATE TABLE users
 
-            if (mysql_query(conn, "CREATE TABLE user_server (\
-                                  server_id INT UNSIGNED NOT NULL,\
-                                  PRIMARY KEY (server_id),\
-                                  user_id INT UNSIGNED NOT NULL,\
-                                  FOREIGN KEY (user_id) REFERENCES users (user_id),\
-                                  server_ip CHAR(16) NOT NULL,\
-                                  server_port CHAR(6) NOT NULL,\
-                                  server_onion_service CHAR(40) NULL,\
-                                  server_key CHAR(40) NOT NULL\
-                                  );") != 0){ my_error_exit ("CREATE TABLE \'user_server\' failed."); }
-            printf("%s, Table \'user_server\' created.\n", timestamp());
+            if (mysql_query(conn, user_server) != 0){
+                my_error_exit ("CREATE TABLE \'user_server\' failed.");
+            } printf("%s, Table \'user_server\' created.\n", timestamp());
             //CREATE TABLE user_server
 
-            if (mysql_query(conn, "CREATE TABLE phone_number (\
-                            phone_id INT UNSIGNED NOT NULL,\
-                            PRIMARY KEY (phone_id),\
-                            user_id INT UNSIGNED NOT NULL,\
-                            FOREIGN KEY (user_id) REFERENCES users (user_id),\
-                            area_code VARCHAR(5) NOT NULL,\
-                            phone_number VARCHAR(15) NOT NULL,\
-                            phone_number_from DATE NOT NULL,\
-                            phone_number_to DATE NULL\
-                        );") != 0){ my_error_exit ("CREATE TABLE \'phone_number\' failed."); }
-            printf("%s, Table \'phone_number\' created.\n", timestamp());
+            if (mysql_query(conn, phone_number) != 0){
+                my_error_exit ("CREATE TABLE \'phone_number\' failed.");
+            } printf("%s, Table \'phone_number\' created.\n", timestamp());
             //CREATE TABLE phone_number
 
-            if (mysql_query(conn, "CREATE TABLE email_address (\
-                            email_id INT UNSIGNED NOT NULL,\
-                            PRIMARY KEY (email_id),\
-                            user_id INT UNSIGNED NOT NULL,\
-                            FOREIGN KEY (user_id) REFERENCES users (user_id),\
-                            email VARCHAR(15) NOT NULL,\
-                            gpg_key_id VARCHAR(16) NULL,\
-                            gpg_fingerprint VARCHAR(52) NULL,\
-                            email_address_from DATE NOT NULL,\
-                            email_address_to DATE NULL\
-                        );") != 0){ my_error_exit ("CREATE TABLE \'email_address\' failed."); }
-            printf("%s, Table \'email_address\' created.\n", timestamp());
+            if (mysql_query(conn, email_address) != 0){
+                my_error_exit ("CREATE TABLE \'email_address\' failed.");
+            } printf("%s, Table \'email_address\' created.\n", timestamp());
             //CREATE TABLE email_address
 
-            if (mysql_query(conn, "CREATE TABLE physical_address (\
-                            address_id INT UNSIGNED NOT NULL,\
-                            PRIMARY KEY (address_id),\
-                            user_id INT UNSIGNED NOT NULL,\
-                            FOREIGN KEY (user_id) REFERENCES users (user_id),\
-                            line_1 VARCHAR(15) NOT NULL,\
-                            line_2 VARCHAR(15) NULL,\
-                            town_city VARCHAR(15) NOT NULL,\
-                            zip_postcode VARCHAR(10) NOT NULL,\
-                            state_province_county VARCHAR(20) NOT NULL,\
-                            country VARCHAR(20) NOT NULL,\
-                            other VARCHAR(10) NULL,\
-                            address_from DATE NOT NULL,\
-                            address_to DATE NULL\
-                            );") != 0){ my_error_exit ("CREATE TABLE \'physical_address\' failed."); }
-            printf("%s, Table \'physical_address\' created.\n", timestamp());
+            if (mysql_query(conn, physical_address) != 0){
+                my_error_exit ("CREATE TABLE \'physical_address\' failed.");
+            } printf("%s, Table \'physical_address\' created.\n", timestamp());
             //CREATE TABLE physical_address
 
-            if (mysql_query(conn, "CREATE TABLE user_generated_credits (\
-                            credit_id INT UNSIGNED NOT NULL,\
-                            PRIMARY KEY (credit_id),\
-                            user_id INT UNSIGNED NOT NULL,\
-                            FOREIGN KEY (user_id) REFERENCES users (user_id),\
-                            credits INT NOT NULL,\
-                            created_on DATE NOT NULL,\
-                            credit_sha1 CHAR(40) NOT NULL\
-                        );") != 0){ my_error_exit ("CREATE TABLE \'user_generated_credits\' failed."); }
-            printf("%s, Table \'user_generated_credits\' created.\n", timestamp());
+            if (mysql_query(conn, business) != 0){
+                my_error_exit ("CREATE TABLE \'business\' failed.");
+            } printf("%s, Table \'business\' created.\n", timestamp());
+            //CREATE TABLE business
+
+            if (mysql_query(conn, user_generated_credits) != 0){
+                my_error_exit ("CREATE TABLE \'user_generated_credits\' failed.");
+            } printf("%s, Table \'user_generated_credits\' created.\n", timestamp());
             //CREATE TABLE user_generated_credits
 
-            if (mysql_query(conn, "CREATE TABLE receved_credits (\
-                            credits INT NOT NULL\
-                        );") != 0){ my_error_exit ("CREATE TABLE \'receved_credits\' failed."); }
-            printf("%s, Table \'receved_credits\' created.\n", timestamp());
+            if (mysql_query(conn, receved_credits) != 0){
+                my_error_exit ("CREATE TABLE \'receved_credits\' failed.");
+            } printf("%s, Table \'receved_credits\' created.\n", timestamp());
             //CREATE TABLE receved_credits
 
-            if (mysql_query(conn, "CREATE TABLE sent_credits (\
-                            credits INT NOT NULL\
-                        );") != 0){ my_error_exit ("CREATE TABLE \'sent_credits\' failed."); }
-            printf("%s, Table \'sent_credits\' created.\n", timestamp());
+            if (mysql_query(conn, sent_credits) != 0){
+                my_error_exit ("CREATE TABLE \'sent_credits\' failed.");
+            } printf("%s, Table \'sent_credits\' created.\n", timestamp());
             //CREATE TABLE sent_credits
 
-            if (mysql_query(conn, "CREATE TABLE last_credits (\
-                            credits INT NOT NULL\
-                        );") != 0){ my_error_exit ("CREATE TABLE \'last_credits\' failed."); }
-            printf("%s, Table \'last_credits\' created.\n", timestamp());
-            //CREATE TABLE last_credits
+            if (mysql_query(conn, generate_credits_on_date) != 0){
+                my_error_exit ("CREATE TABLE \'generate_credits_on_date\' failed.");
+            } printf("%s, Table \'generate_credits_on_date\' created.\n", timestamp());
+            //CREATE TABLE generate_credits_on_date
 
             printf("%s, All tables created sucessfully.\n", timestamp());
             mysql_free_result (res_set);
