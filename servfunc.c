@@ -1,6 +1,7 @@
 /* Copyright (C) 2015 Schrodi */
 /********************************************************
- * servfunc -- functions to start listening.            *
+ * servfunc --  functions to create a secure connection *
+                to the client.                          *
  ********************************************************/
 
 /* Copyright (C) 1991-2014 Free Software Foundation, Inc. */

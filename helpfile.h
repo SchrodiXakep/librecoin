@@ -18,7 +18,7 @@ extern const int PASS_SET;
 extern const int DATABASE_SET;
 
 /* Global Variables */
-#define SIZE 256 //limit for password length.
+#define SIZE 1024 //limit for password length.
 
 extern const char* host;
 extern const char* user;
